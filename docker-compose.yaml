@@ -1,0 +1,27 @@
+version: "3"
+services:
+  php:
+    # імʼя контейнеру, яке будемо використовувати при вході на контейнер
+    container_name: php_study
+    build:
+      context: ./
+      # посилання на докерфайл з налаштуванням контейнеру
+      dockerfile: "docker/configs/php/Dockerfile"
+    # встановлюємо змінні оточення
+    environment:
+      XDEBUG_CONFIG: "remote_host={{YOUR_IP_ADDRESS}}"
+      PHP_IDE_CONFIG: "serverName=docker"
+    # прописуємо синхронізацію директорій
+    volumes:
+      - ./:/srv/src/php_study
+
+  db:
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - ./db:/var/lib/mysql
