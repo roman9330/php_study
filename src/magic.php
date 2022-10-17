@@ -1,41 +1,39 @@
 <?php
+// Объявление простого класса
+class TestClass
+{
+    public $foo;
+    private $data = array();
 
-
-class Tweet {
-
-    protected $id;
-    protected $text;
-    protected $read;
-
-    public function __construct($id, $text)
+    public function __construct($foo)
     {
-        $this->id = $id;
-        $this->text = $text;
-        $this->read = false;
+        $this->foo = $foo;
     }
 
-    public function __sleep()
-    {
-        return array('id', 'text');
+    public function __call($name, $arguments) {
+        return 'Вызов несуществующего метода ' . $name . PHP_EOL;
     }
 
-    public function __wakeup()
+    public function __unset($name)
     {
-        $this->storage->connect();
+        echo "Уничтожение '$name'";
+        unset($this->data[$name]);
     }
 
-    public function __invoke($user)
+    public function __toString()
     {
-        $user->addTweet($this);
-        return $user;
+        return $this->foo;
     }
 
 }
 
+$class = new TestClass('Вызов toString');
+echo PHP_EOL ;
+unset($class->agg1);
+echo PHP_EOL;
+echo $class;
+echo PHP_EOL;
+echo $class->runTest();
+echo PHP_EOL;
 
-
-$users = array(new User('Ev'), new User('Jack'), new User('Biz'));
-$tweet = new Tweet(123, 'Hello world');
-$users = array_map($tweet, $users);
-
-var_dump($users);
+?>

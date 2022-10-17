@@ -1,7 +1,7 @@
 FROM php:8.1-fpm
 
 RUN apt-get -y update && apt-get -y install git unzip vim
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 RUN pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \

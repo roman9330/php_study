@@ -1,47 +1,33 @@
 <?php
+include __DIR__ . "/include/config.php";
+include __DIR__ . "/include/shortUrl.php";
 
-function inputparameter($label)
-{
-    $res = readline($label);
-    if (is_numeric($res)) {
-        return $res;
-    } else {
-        echo "Введенное значение не является числом. Повторите ввод" . PHP_EOL;
-        return inputparameter($label);
-    }
+try {
+    $pdo = new PDO(DB_PDODRIVER . ":host=" . DB_HOST .
+        ";dbname=" . DB_DATABASE_NAME,
+        DB_USERNAME, DB_PASSWORD);
+} catch (\PDOException $e) {
+    trigger_error("Ошибка: не могу установить соединение с базой данных.");
+    exit;
 }
 
-function separator()
-{
-    return str_repeat('*', 70) . PHP_EOL;
-}
-echo separator();
-$a = inputparameter("Первое число: ");
-$b = inputparameter("Второе число: ");
-
-$operator = readline("Введите оператор(+,-,*,/):");
-
-switch ($operator) {
-    case "+":
-        $result = $a + $b;
+$quetion = readline("Выберите операцию: (1 - кодировать / 2 - декодировать)");
+switch ($quetion) {
+    case 1:
+        $longUrl = readline("Введите URL: ");
+        $shortUrl = new ShortUrl($pdo);
+        $code = $shortUrl->encode($longUrl);
+        $result = "Короткая ссылка: " . SHORTURL_PREFIX . $code;
         break;
-    case "-":
-        $result = $a - $b;
-        break;
-    case "*":
-        $result = $a * $b;
-        break;
-    case "/":
-        if ($b <> 0) {
-            $result = $a / $b;
-        } else {
-            $result = "На 0 делить нельзя";
-        }
+    case 2:
+        $shortcode = readline("Введите короткую ссылку: ");
+        $shortUrl = new ShortUrl($pdo);
+        $result = "Длинная ссылка: " . $shortUrl->decode($shortcode);
         break;
     default:
-        $result = "Операция не поддерживается";
+        $result = "Чего?";
 }
-echo separator();
-echo "Результат:" . PHP_EOL;
-echo $a . " " . $operator . " " . $b . " = " . $result . PHP_EOL;
-echo separator();
+
+echo $result . PHP_EOL;
+
+

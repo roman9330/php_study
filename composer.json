@@ -1,6 +1,8 @@
 {
   "require": {
     "ext-readline": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "ext-mysqli": "*"
   }
 }
