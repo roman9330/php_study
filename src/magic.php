@@ -35,5 +35,3 @@ echo $class;
 echo PHP_EOL;
 echo $class->runTest();
 echo PHP_EOL;
-
-?>

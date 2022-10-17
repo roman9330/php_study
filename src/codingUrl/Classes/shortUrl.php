@@ -1,6 +1,10 @@
 <?php
-include dirname(__DIR__) . "/interfaces/IUrlDecoder.php";
-include dirname(__DIR__) . "/interfaces/IUrlEncoder.php";
+
+use Interfaces\IUrlDecoder;
+use Interfaces\IUrlEncoder;
+
+include dirname(__DIR__) . "/Interfaces/IUrlDecoder.php";
+include dirname(__DIR__) . "/Interfaces/IUrlEncoder.php";
 
 class ShortUrl implements IUrlEncoder, IUrlDecoder
 

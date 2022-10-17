@@ -1,11 +1,13 @@
 <?php
+
+namespace Interfaces;
 interface IUrlEncoder
 {
 
     /**
      * @param string $url
-     * @throws \InvalidArgumentException
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function encode(string $url): string;
 }
