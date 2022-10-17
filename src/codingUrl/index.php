@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . "/Include/config.php";
-include __DIR__ . "/Classes/shortUrl.php";
+include __DIR__ . "/Classes/ShortUrl.php";
 include __DIR__ . "/Actions/encode.php";
 include __DIR__ . "/Actions/decode.php";
 
@@ -32,4 +32,4 @@ switch ($quetion) {
         $result = "Чего?";
 }
 
-echo $result;
+echo $result . PHP_EOL;
