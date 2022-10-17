@@ -11,6 +11,11 @@ function inputparameter($label)
     }
 }
 
+function separator()
+{
+    return str_repeat('*', 70) . PHP_EOL;
+}
+echo separator();
 $a = inputparameter("Первое число: ");
 $b = inputparameter("Второе число: ");
 
@@ -36,7 +41,7 @@ switch ($operator) {
     default:
         $result = "Операция не поддерживается";
 }
-
+echo separator();
 echo "Результат:" . PHP_EOL;
 echo $a . " " . $operator . " " . $b . " = " . $result . PHP_EOL;
-
+echo separator();
