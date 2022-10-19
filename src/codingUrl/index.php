@@ -1,8 +1,10 @@
 <?php
-include __DIR__ . "/Include/config.php";
-include __DIR__ . "/Classes/ShortUrl.php";
-include __DIR__ . "/Actions/encode.php";
-include __DIR__ . "/Actions/decode.php";
+include "Include/config.php";
+include "Classes/ShortUrl.php";
+include "Actions/encode.php";
+include "Actions/decode.php";
+
+require_once '../autoload.php';
 
 try {
     $pdo = new PDO(DB_PDODRIVER . ":host=" . DB_HOST .
