@@ -1,4 +1,9 @@
 <?php
+/**
+ * При запуске программы массив 'db' (свойство класса DataRepository) заполняется
+ * записями из базы данных. Во время выполнения программы все действия происходят с этим массивом.
+ *  При завершении программы, новые данные из массива записываются в базу данных.
+ */
 
 use MyStudy\Url\{
     DataRepository,
@@ -17,7 +22,7 @@ try {
         DB_USERNAME, DB_PASSWORD);
     $coder = new UrlCoder(new DataRepository($pdo));
 } catch (PDOException $e) {
-    $log = new SenderLogger('Ошибка соединения с базой данных', Level::Error);
+    new SenderLogger($e->getMessage(), Level::Error);
     echo ("Во время выполнения программы произошли ошибки!. Подробности смотрите в логе") . PHP_EOL;
     exit;
 }

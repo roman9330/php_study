@@ -4,7 +4,7 @@ namespace MyStudy\Url;
 
 use Carbon\Carbon;
 use Monolog\Level;
-use MyStudy\Url\Exceptions\NotConnectException;
+use MyStudy\Url\Exceptions\{NotConnectException};
 use PDO;
 
 
@@ -13,7 +13,7 @@ class DataRepository
     protected object $pdo;
     protected array $db = [];
     protected static string $table = "short_urls";
-    protected $timestamp;
+    protected int $timestamp;
 
     /**
      * @param object $pdo
@@ -28,12 +28,12 @@ class DataRepository
     {
         try {
             $query = "SELECT short_code, long_url, 0 as isNew FROM " . self::$table;
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute();
-            $this->db = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $log = new SenderLogger("Данные успешно прочитаны", Level::Info);
-        }catch (NotConnectException $e){
-            $log = new SenderLogger("Ошибка соединения с базой", Level::Error);
+            $recordset = $this->pdo->prepare($query);
+            $recordset->execute();
+            $this->db = $recordset->fetchAll(PDO::FETCH_ASSOC);
+            new SenderLogger("Данные успешно прочитаны", Level::Info);
+        } catch (NotConnectException $e) {
+            new SenderLogger($e->getMessage(), Level::Error);
         }
     }
 
@@ -41,23 +41,23 @@ class DataRepository
     {
         try {
             $this->timestamp = Carbon::now()->timestamp;
-            foreach ($this->db as $dbrow) {
-                if ($dbrow['isNew'] !== 0) {
+            foreach ($this->db as $dbRow) {
+                if ($dbRow['isNew'] !== 0) {
                     $query = "INSERT INTO " . self::$table .
                         " (long_url, short_code, date_created) " .
                         " VALUES (:longurl, :shortcode, :timestamp)";
-                    $stmnt = $this->pdo->prepare($query);
+                    $recordset = $this->pdo->prepare($query);
                     $params = array(
-                        "longurl" => $dbrow['long_url'],
-                        "shortcode" => $dbrow['short_code'],
+                        "longurl" => $dbRow['long_url'],
+                        "shortcode" => $dbRow['short_code'],
                         "timestamp" => $this->timestamp
                     );
-                    $stmnt->execute($params);
+                    $recordset->execute($params);
                 }
             }
-            $log = new SenderLogger("Данные успешно записаны", Level::Info);
+            new SenderLogger("Данные успешно записаны", Level::Info);
         } catch (NotConnectException $e) {
-            $log = new SenderLogger("Ошибка соединения с базой", Level::Error);
+            new SenderLogger($e->getMessage(), Level::Error);
         }
     }
 
@@ -78,7 +78,7 @@ class DataRepository
                 return $item['long_url'];
             }
         }
-        $log = new SenderLogger("Несуществующий код " . $code, Level::Alert);
+        new SenderLogger("Несуществующий код " . $code, Level::Alert);
         return false;
     }
 
@@ -98,5 +98,6 @@ class DataRepository
         $newRow['short_code'] = $code;
         $newRow['isNew'] = 1;
         $this->db[] = $newRow;
+        new SenderLogger("Добавлен новый код для Url " . $url, Level::Alert);
     }
 }
