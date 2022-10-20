@@ -3,10 +3,10 @@
 namespace MyStudy\Url;
 
 use Monolog\{
-    Handler\StreamHandler,
     Level,
     Logger
 };
+
 
 class SenderLogger
 {
@@ -15,7 +15,10 @@ class SenderLogger
     public function __construct(string $message, Level $msgType)
     {
         $this->logger = new Logger('general');
-        $this->logger->pushHandler(new StreamHandler(__DIR__ . '/../Log.log', Level::Info));
+        $handler = StHandler::getInstance(__DIR__ . '/../Log.log', Level::Info)->getHandler();
+        //$handler = $instance->getHandler();
+        //$this->logger->pushHandler(new StreamHandler(__DIR__ . '/../Log.log', Level::Info));
+        $this->logger->pushHandler($handler);
         $this->logger->log($msgType, $message);
     }
 }
