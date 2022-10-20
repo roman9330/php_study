@@ -2,9 +2,11 @@
 
 namespace MyStudy\Url;
 
-use MyStudy\Url\Interfaces\{IUrlDecoder, IUrlEncoder};
-use MyStudy\Url\Exceptions\NotFoundException;
-use MyStudy\Url\Validator;
+use MyStudy\Url\Interfaces\{
+    IUrlDecoder,
+    IUrlEncoder
+};
+require_once "Include/config.php";
 
 /**
  *
@@ -25,7 +27,11 @@ class UrlCoder implements IUrlEncoder, IUrlDecoder
      */
     public function decode(string $code): string
     {
-        return $this->repository->getUrlByCode($code);
+        $url = $this->repository->getUrlByCode($code);
+        if (!$url) {
+            return '';
+        }
+        return $url;
     }
 
     /**
@@ -39,24 +45,24 @@ class UrlCoder implements IUrlEncoder, IUrlDecoder
         if ($isValid) {
             $code = $this->repository->getCodeByUrl($url);
             if (!$code) {
-                $code = $this->generateAndLoadCode($url);
+                $code = $this->generateAndAddingCode($url);
             }
             return $code;
         }
-        return false;
+        return '';
     }
 
     /**
      * @param string $url
      * @return string
      */
-    public function generateAndLoadCode(string $url): string
+    public function generateAndAddingCode(string $url): string
     {
         $code = $this->generateCode();
         if (!$this->repository->codeIsset($code)) {
-            $this->repository->loadCode($code, $url);
+            $this->repository->addingCodeToArray($code, $url);
         } else {
-            $this->generateAndLoadCode($url);
+            $this->generateAndAddingCode($url);
         }
         return $code;
     }
@@ -66,7 +72,7 @@ class UrlCoder implements IUrlEncoder, IUrlDecoder
      */
     private function generateCode(): string
     {
-        return substr(str_shuffle($this::$chars), 0, 10);
+        return substr(str_shuffle($this::$chars), 0, CODE_LENGTH);
     }
 
 }

@@ -2,17 +2,20 @@
 
 namespace MyStudy\Url;
 
-use Monolog\Level;
-use Monolog\Logger;
+use Monolog\{
+    Handler\StreamHandler,
+    Level,
+    Logger
+};
 
 class SenderLogger
 {
-    private $logger;
+    private Logger $logger;
 
-    public function __construct(string $message, Level $level)
+    public function __construct(string $message, Level $msgType)
     {
         $this->logger = new Logger('general');
-        $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/../Log.log', $level));
-        $this->logger->alert($message);
+        $this->logger->pushHandler(new StreamHandler(__DIR__ . '/../Log.log', Level::Info));
+        $this->logger->log($msgType, $message);
     }
 }

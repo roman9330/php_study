@@ -5,6 +5,7 @@ use MyStudy\Url\{
     UrlCoder,
     SenderLogger
 };
+use Monolog\Level;
 
 require_once "Url/Include/config.php";
 //require_once 'autoload.php';
@@ -16,26 +17,50 @@ try {
         DB_USERNAME, DB_PASSWORD);
     $coder = new UrlCoder(new DataRepository($pdo));
 } catch (PDOException $e) {
-    $e->getMessage();
-    $log = new SenderLogger('Ошибка соединения с базой данных', \Monolog\Level::Error);
+    $log = new SenderLogger('Ошибка соединения с базой данных', Level::Error);
+    echo ("Во время выполнения программы произошли ошибки!. Подробности смотрите в логе") . PHP_EOL;
     exit;
 }
 
-$quetion = readline("Выберите операцию: (1 - кодировать / 2 - декодировать)");
-switch ($quetion) {
-    case 1:
-        $longUrl = readline("Введите URL: ");
-        $result = "Короткая ссылка: " . $coder->encode($longUrl);
-        if(!$result){
-            $result = 'Во время выполнения произошли ошибки! Подробности смотрите в логе';
-        }
-        break;
-    case 2:
-        $shortCode = readline("Введите короткую ссылку: ");
-        $result = "Длинная ссылка: " . $coder->decode($shortCode);
-        break;
-    default:
-        $result = "Чего?";
+programStart($coder);
+
+function programStart(UrlCoder $coder): void
+{
+    $question = readline("Выберите операцию: (1 - кодировать / 2 - декодировать)");
+    switch ($question) {
+        case 1:
+            $longUrl = readline("Введите URL: ");
+            $result = $coder->encode($longUrl);
+            if (mb_strlen($result) > 0) {
+                $result = "Короткая ссылка: " . $result;
+            } else {
+                $result = 'Во время выполнения произошли ошибки! Подробности смотрите в логе';
+            }
+            break;
+        case 2:
+            $shortCode = readline("Введите короткую ссылку: ");
+            $result = $coder->decode($shortCode);
+            if (mb_strlen($result) > 0) {
+                $result = "Длинная ссылка: " . $result;
+            } else {
+                $result = 'Во время выполнения произошли ошибки! Подробности смотрите в логе';
+            }
+            break;
+        default:
+            $result = "Чего?";
+    }
+    echo $result . PHP_EOL;
+    continueProgram($coder);
 }
 
-echo $result . PHP_EOL;
+function continueProgram(UrlCoder $coder): void
+{
+    $question = readline("Хотоие продолжить?: (1 - да)");
+    switch ($question) {
+        case 1:
+            programStart($coder);
+            break;
+        default:
+            exit();
+    }
+}

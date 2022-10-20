@@ -1,13 +1,13 @@
 <?php
 namespace MyStudy\Url;
-use MyStudy\Url\SenderLogger;
+use Monolog\Level;
 
 class Validator
 {
     public function validateUrl(string $url): bool
     {
         if(empty($url) || !filter_var($url, FILTER_VALIDATE_URL) || !$this->checkUrl($url)){
-            $log = new SenderLogger('Неверный Url ' . $url, \Monolog\Level::Error);
+            $log = new SenderLogger('Неверный Url ' . $url, Level::Alert);
             return false;
         }
         return true;
