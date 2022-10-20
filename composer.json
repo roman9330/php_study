@@ -1,0 +1,24 @@
+{
+    "name": "roman/php_study",
+    "description": "testing",
+    "type": "project",
+    "require": {
+        "monolog/monolog": "3.2.*",
+        "nesbot/carbon": "2.*",
+        "ext-pdo": "*",
+        "ext-readline": "*",
+      "ext-curl": "*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MyStudy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Roman"
+        }
+    ],
+    "minimum-stability": "dev"
+}
