@@ -2,10 +2,12 @@
 
 namespace MyStudy\Url;
 
+use GuzzleHttp\Client;
 use MyStudy\Url\Interfaces\{
     IUrlDecoder,
     IUrlEncoder
 };
+
 require_once "Include/config.php";
 
 /**
@@ -13,7 +15,7 @@ require_once "Include/config.php";
  */
 class UrlCoder implements IUrlEncoder, IUrlDecoder
 {
-    protected static $chars = "123456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+    protected static string $chars = "123456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     protected DataRepository $repository;
 
     public function __construct($rep)
@@ -29,7 +31,7 @@ class UrlCoder implements IUrlEncoder, IUrlDecoder
     {
         $url = $this->repository->getUrlByCode($code);
         if (!$url) {
-            return '';
+            $url = '';
         }
         return $url;
     }
@@ -40,16 +42,17 @@ class UrlCoder implements IUrlEncoder, IUrlDecoder
      */
     public function encode(string $url): string
     {
-        $valid = new Validator;
+        $valid = new Validator(new Client());
         $isValid = $valid->validateUrl($url);
         if ($isValid) {
             $code = $this->repository->getCodeByUrl($url);
             if (!$code) {
                 $code = $this->generateAndAddingCode($url);
             }
-            return $code;
+        }else{
+            $code = '';
         }
-        return '';
+        return $code;
     }
 
     /**

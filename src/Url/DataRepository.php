@@ -31,9 +31,10 @@ class DataRepository
             $recordset = $this->pdo->prepare($query);
             $recordset->execute();
             $this->db = $recordset->fetchAll(PDO::FETCH_ASSOC);
-            new SenderLogger("Данные успешно прочитаны", Level::Info);
+            WriterLog::getInstance()->write(Level::Info, "Данные успешно прочитаны");
+            //new SenderLogger("Данные успешно прочитаны", Level::Info);
         } catch (NotConnectException $e) {
-            new SenderLogger($e->getMessage(), Level::Error);
+            WriterLog::getInstance()->write(Level::Error, $e->getMessage());
         }
     }
 
@@ -55,41 +56,46 @@ class DataRepository
                     $recordset->execute($params);
                 }
             }
-            new SenderLogger("Данные успешно записаны", Level::Info);
+            WriterLog::getInstance()->write(Level::Info, "Данные успешно записаны");
         } catch (NotConnectException $e) {
-            new SenderLogger($e->getMessage(), Level::Error);
+            WriterLog::getInstance()->write(Level::Error, $e->getMessage());
         }
     }
 
     public function codeIsset(string $code): bool
     {
+        $result = false;
         foreach ($this->db as $item) {
             if ($item['short_code'] == $code) {
-                return true;
+                $result = true;
             }
         }
-        return false;
+        return $result;
     }
 
     public function getUrlByCode(string $code): string|bool
     {
+        $result = false;
         foreach ($this->db as $item) {
             if ($item['short_code'] == $code) {
-                return $item['long_url'];
+                $result = $item['long_url'];
             }
         }
-        new SenderLogger("Несуществующий код " . $code, Level::Alert);
-        return false;
+        if(!$result) {
+            WriterLog::getInstance()->write(Level::Alert, "Несуществующий код " . $code);
+        }
+        return $result;
     }
 
     public function getCodeByUrl(string $url): string|bool
     {
+        $result = false;
         foreach ($this->db as $item) {
             if ($item['long_url'] == $url) {
-                return $item['short_code'];
+                $result = $item['short_code'];
             }
         }
-        return false;
+        return $result;
     }
 
     public function addingCodeToArray(string $code, string $url): void
@@ -98,6 +104,6 @@ class DataRepository
         $newRow['short_code'] = $code;
         $newRow['isNew'] = 1;
         $this->db[] = $newRow;
-        new SenderLogger("Добавлен новый код для Url " . $url, Level::Alert);
+        WriterLog::getInstance()->write(Level::Info, "Добавлен новый код для Url " . $url);
     }
 }

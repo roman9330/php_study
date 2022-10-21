@@ -7,6 +7,7 @@
         "nesbot/carbon": "2.*",
         "ext-pdo": "*",
         "ext-readline": "*",
+        "guzzlehttp/guzzle": "7.*",
       "ext-curl": "*"
     },
     "license": "MIT",

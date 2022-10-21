@@ -5,11 +5,7 @@
  *  При завершении программы, новые данные из массива записываются в базу данных.
  */
 
-use MyStudy\Url\{
-    DataRepository,
-    UrlCoder,
-    SenderLogger
-};
+use MyStudy\Url\{DataRepository, UrlCoder, WriterLog};
 use Monolog\Level;
 
 require_once "Url/Include/config.php";
@@ -22,7 +18,8 @@ try {
         DB_USERNAME, DB_PASSWORD);
     $coder = new UrlCoder(new DataRepository($pdo));
 } catch (PDOException $e) {
-    new SenderLogger($e->getMessage(), Level::Error);
+    WriterLog::getInstance()->write(Level::Error, $e->getMessage());
+    //new SenderLogger($e->getMessage(), Level::Error);
     echo ("Во время выполнения программы произошли ошибки!. Подробности смотрите в логе") . PHP_EOL;
     exit;
 }
