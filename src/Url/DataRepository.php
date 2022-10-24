@@ -31,9 +31,10 @@ class DataRepository
             $recordset = $this->pdo->prepare($query);
             $recordset->execute();
             $this->db = $recordset->fetchAll(PDO::FETCH_ASSOC);
+            //WriterLog::info("Данные успешно прочитаны");
             WriterLog::getInstance()->write(Level::Info, "Данные успешно прочитаны");
-            //new SenderLogger("Данные успешно прочитаны", Level::Info);
         } catch (NotConnectException $e) {
+            //WriterLog::error($e->getMessage());
             WriterLog::getInstance()->write(Level::Error, $e->getMessage());
         }
     }
@@ -56,8 +57,10 @@ class DataRepository
                     $recordset->execute($params);
                 }
             }
+            //WriterLog::info("Данные успешно записаны");
             WriterLog::getInstance()->write(Level::Info, "Данные успешно записаны");
         } catch (NotConnectException $e) {
+            //WriterLog::error($e->getMessage());
             WriterLog::getInstance()->write(Level::Error, $e->getMessage());
         }
     }
@@ -82,6 +85,7 @@ class DataRepository
             }
         }
         if(!$result) {
+            //WriterLog::alert("Несуществующий код " . $code);
             WriterLog::getInstance()->write(Level::Alert, "Несуществующий код " . $code);
         }
         return $result;
@@ -104,6 +108,7 @@ class DataRepository
         $newRow['short_code'] = $code;
         $newRow['isNew'] = 1;
         $this->db[] = $newRow;
+        //WriterLog::info("Добавлен новый код для Url " . $url);
         WriterLog::getInstance()->write(Level::Info, "Добавлен новый код для Url " . $url);
     }
 }

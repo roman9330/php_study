@@ -7,6 +7,7 @@ use Monolog\{
     Level,
     Logger
 };
+use Psr\Log\LoggerInterface;
 
 require_once "Include/config.php";
 

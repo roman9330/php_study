@@ -26,7 +26,6 @@ class Validator
         $result = true;
         if(empty($url) || !filter_var($url, FILTER_VALIDATE_URL) || !$this->checkUrl($url)){
             WriterLog::getInstance()->write(Level::Alert, "Неверный Url " . $url);
-            //new SenderLogger('Неверный Url ' . $url, Level::Alert);
             $result = false;
         }
         return $result;
@@ -45,7 +44,7 @@ class Validator
             $response = $this->client->request('GET', $url);
             $result = (!empty($response) && in_array($response->getStatusCode(), $validCodeArray));
         }catch (ConnectException $e){
-            WriterLog::getInstance()->write($e->getMessage(), Level::Error);
+            WriterLog::getInstance()->write(Level::Error, $e->getMessage());
             $result = false;
         }
         return $result;

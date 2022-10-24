@@ -18,8 +18,8 @@ try {
         DB_USERNAME, DB_PASSWORD);
     $coder = new UrlCoder(new DataRepository($pdo));
 } catch (PDOException $e) {
-    WriterLog::getInstance()->write(Level::Error, $e->getMessage());
-    //new SenderLogger($e->getMessage(), Level::Error);
+    WriterLog::error($e->getMessage());
+    //WriterLog::getInstance()->write(Level::Error, $e->getMessage());
     echo ("Во время выполнения программы произошли ошибки!. Подробности смотрите в логе") . PHP_EOL;
     exit;
 }
