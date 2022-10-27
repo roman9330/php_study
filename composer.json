@@ -8,7 +8,9 @@
         "ext-pdo": "*",
         "ext-readline": "*",
         "guzzlehttp/guzzle": "7.*",
-      "ext-curl": "*"
+        "psr/container": "2.*",
+        "ufo-cms/colored_cli": " *",
+        "ext-curl": "*"
     },
     "license": "MIT",
     "autoload": {
